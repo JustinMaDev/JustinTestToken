@@ -130,6 +130,47 @@ async function mint_token(){
     console.error("Transaction failed:", err);
   }
 }
+/*
+async function rm_auth(){
+  
+  // 0. Load wallet from local file
+  const walletPath = path.resolve(process.env.HOME, ".config/solana/id.json");
+  const keypair = Keypair.fromSecretKey(
+    new Uint8Array(JSON.parse(fs.readFileSync(walletPath, "utf-8")))
+  );
 
+  // 1. Set up the provider
+  const connection = new Connection("https://api.devnet.solana.com");
+  const provider = new anchor.AnchorProvider(connection, new anchor.Wallet(keypair), {});
+  anchor.setProvider(provider);
+  console.log("Provider:", provider);
+
+  // 2.  Load the program IDL and create a program instance
+  const program = new anchor.Program(token_minter_idl, provider);
+  const programId = new PublicKey(token_minter_idl.address);
+  console.log("Program ID:", programId.toString());
+
+  const payer = provider.wallet.publicKey;
+
+  // 3. Find the mint PDA
+  const [mintPda, mintBump] = PublicKey.findProgramAddressSync(
+    [Buffer.from("mint")],
+    programId
+  );
+  try{
+    const tx = await program.methods
+    .rmAuth()
+    .accounts({
+      mint: mintPda,
+      payer: payer,
+      tokenProgram: anchor.utils.token.TOKEN_PROGRAM_ID,
+    })
+    .signers([])
+    .rpc();
+  }catch(err){
+    console.error("Transaction failed:", err);
+  }
+} //*/
 //await init_token();
 await mint_token();
+//await rm_auth();
